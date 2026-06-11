@@ -1,0 +1,540 @@
+.domino-page {
+  width: 100vw;
+  height: 100svh;
+  background:
+    radial-gradient(circle at top, rgba(255, 213, 226, 0.13), transparent 34%),
+    linear-gradient(135deg, #5a454c, #786066);
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.domino-table {
+  position: relative;
+  width: 100vw;
+  height: 100svh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.08), transparent 42%),
+    linear-gradient(145deg, #128c7e, #087567 45%, #075d55);
+  box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.3);
+}
+
+.domino-table::before {
+  content: "";
+  position: absolute;
+  inset: 58px 24px 132px;
+  border: 2px solid rgba(255, 255, 255, 0.09);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.07), transparent 55%),
+    rgba(0, 0, 0, 0.045);
+  pointer-events: none;
+}
+
+.domino-topbar {
+  position: absolute;
+  z-index: 20;
+  top: 8px;
+  left: 50%;
+  width: min(1180px, calc(100vw - 32px));
+  display: grid;
+  grid-template-columns: 42px 1fr 42px;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.domino-topbar p {
+  margin: 0 0 2px;
+  color: #fff0f6;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.domino-topbar h1 {
+  margin: 0;
+  font-size: clamp(1.15rem, 4vw, 1.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.domino-icon-button {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 247, 251, 0.36);
+  border-radius: 12px;
+  background: rgba(28, 55, 54, 0.46);
+  color: #fff7fb;
+  font-size: 1.35rem;
+  font-weight: 900;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.domino-turn-pill {
+  position: absolute;
+  z-index: 21;
+  top: 62px;
+  left: 50%;
+  min-width: 210px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 247, 251, 0.24);
+  border-radius: 999px;
+  padding: 7px 16px;
+  background: rgba(20, 51, 48, 0.72);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(8px);
+  transform: translateX(-50%);
+}
+
+.domino-turn-pill span {
+  color: rgba(255, 247, 251, 0.66);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.domino-turn-pill strong {
+  color: #ffffff;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.domino-board-meta {
+  position: absolute;
+  z-index: 19;
+  top: 104px;
+  left: 50%;
+  width: min(700px, calc(100vw - 28px));
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  transform: translateX(-50%);
+}
+
+.domino-board-meta div {
+  min-width: 112px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  background: rgba(19, 55, 51, 0.6);
+  border: 1px solid rgba(255, 247, 251, 0.16);
+  text-align: center;
+  backdrop-filter: blur(8px);
+}
+
+.domino-board-meta span {
+  display: block;
+  color: rgba(255, 247, 251, 0.64);
+  font-size: 0.64rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.domino-board-meta strong {
+  display: block;
+  margin-top: 2px;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.domino-board-area {
+  position: absolute;
+  z-index: 5;
+  left: 24px;
+  right: 24px;
+  top: 146px;
+  bottom: 156px;
+  display: grid;
+  place-items: center;
+  border: 2px dashed transparent;
+  border-radius: 34px;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.domino-board-area.drag-valid {
+  border-color: rgba(255, 213, 226, 0.56);
+  background: rgba(255, 213, 226, 0.08);
+}
+
+.domino-board-area.drag-invalid {
+  border-color: rgba(255, 87, 87, 0.56);
+  background: rgba(255, 87, 87, 0.08);
+}
+
+.domino-trail-board {
+  position: absolute;
+  inset: 0;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.055), transparent 58%),
+    rgba(0, 0, 0, 0.035);
+}
+
+.domino-board-piece {
+  position: absolute;
+  left: calc(50% + var(--tile-x));
+  top: calc(50% + var(--tile-y));
+  z-index: 4;
+  width: var(--tile-w);
+  height: var(--tile-h);
+  transform: translate(-50%, -50%);
+}
+
+.domino-drop-marker {
+  position: absolute;
+  z-index: 8;
+  left: calc(50% + var(--drop-x));
+  top: calc(50% + var(--drop-y));
+  width: 72px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  border-radius: 16px;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.domino-drop-marker.valid {
+  border: 2px solid rgba(255, 213, 226, 0.9);
+  background: rgba(255, 213, 226, 0.18);
+  color: #ffffff;
+}
+
+.domino-drop-marker.invalid {
+  border: 2px solid rgba(255, 87, 87, 0.9);
+  background: rgba(255, 87, 87, 0.18);
+  color: #ffffff;
+}
+
+.domino-message-pill {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  bottom: 126px;
+  width: min(760px, calc(100vw - 28px));
+  min-height: 38px;
+  display: grid;
+  place-items: center;
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 247, 251, 0.14);
+  border-radius: 999px;
+  background: rgba(20, 51, 48, 0.76);
+  color: rgba(255, 247, 251, 0.92);
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.35;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  transform: translateX(-50%);
+}
+
+.domino-bottom-area {
+  position: absolute;
+  z-index: 30;
+  left: 50%;
+  bottom: 10px;
+  width: min(980px, calc(100vw - 28px));
+  transform: translateX(-50%);
+}
+
+.domino-end-card,
+.domino-hand-shell {
+  border: 1px solid rgba(255, 247, 251, 0.18);
+  border-radius: 22px;
+  background: rgba(255, 235, 216, 0.94);
+  color: #4c3840;
+  box-shadow: 0 -18px 44px rgba(0, 0, 0, 0.22);
+}
+
+.domino-end-card {
+  width: min(620px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  text-align: center;
+}
+
+.domino-hand-shell {
+  padding: 10px 12px;
+}
+
+.domino-hand-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.domino-hand-header span {
+  display: block;
+  color: rgba(76, 56, 64, 0.62);
+  font-size: 0.7rem;
+  font-weight: 1000;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.domino-hand-header strong {
+  display: block;
+  margin-top: 2px;
+  color: #4c3840;
+  font-size: 1.22rem;
+  line-height: 1;
+}
+
+.domino-hand-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.domino-hand {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  overflow-x: auto;
+  padding: 3px 4px 7px;
+}
+
+.domino-hand-tile {
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  transition:
+    transform 0.14s ease,
+    filter 0.14s ease,
+    opacity 0.14s ease;
+}
+
+.domino-hand-tile:active {
+  cursor: grabbing;
+}
+
+.domino-hand-tile.playable {
+  filter: drop-shadow(0 0 8px rgba(255, 111, 168, 0.35));
+}
+
+.domino-hand-tile.playable:hover {
+  transform: translateY(-8px);
+}
+
+.domino-hand-tile.blocked {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.domino-hand-tile.selected {
+  transform: translateY(-10px);
+  filter: drop-shadow(0 0 12px rgba(255, 111, 168, 0.52));
+}
+
+.domino-drag-preview {
+  position: fixed;
+  z-index: 999;
+  left: var(--drag-x);
+  top: var(--drag-y);
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(1.04);
+  filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.28));
+}
+
+.domino-tile {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr 2px 1fr;
+  align-items: center;
+  justify-items: center;
+  border: 2px solid rgba(54, 42, 48, 0.8);
+  border-radius: 8px;
+  background: #fff8ec;
+  color: #3d3036;
+  font-weight: 1000;
+  box-shadow:
+    inset 0 -4px 0 rgba(0, 0, 0, 0.08),
+    0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.domino-tile i {
+  width: 2px;
+  height: 70%;
+  border-radius: 999px;
+  background: rgba(54, 42, 48, 0.28);
+}
+
+.domino-tile span {
+  display: grid;
+  place-items: center;
+}
+
+.domino-tile-board {
+  width: var(--tile-w, 58px);
+  height: var(--tile-h, 30px);
+  font-size: 0.86rem;
+}
+
+.domino-tile-board.domino-tile-horizontal {
+  grid-template-columns: 1fr 2px 1fr;
+  grid-template-rows: 1fr;
+}
+
+.domino-tile-board.domino-tile-horizontal i {
+  width: 2px;
+  height: 70%;
+}
+
+.domino-tile-board.domino-tile-vertical {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 2px 1fr;
+}
+
+.domino-tile-board.domino-tile-vertical i {
+  width: 70%;
+  height: 2px;
+}
+
+.domino-tile-hand {
+  width: 66px;
+  height: 88px;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 2px 1fr;
+  font-size: 1.1rem;
+}
+
+.domino-tile-hand i {
+  width: 70%;
+  height: 2px;
+}
+
+.domino-tile.double {
+  background: #ffe4ed;
+}
+
+.domino-side-actions {
+  margin-top: 6px;
+  padding: 8px;
+  border-radius: 16px;
+  background: rgba(76, 56, 64, 0.08);
+  text-align: center;
+}
+
+.domino-side-actions span {
+  display: block;
+  margin-bottom: 7px;
+  color: rgba(76, 56, 64, 0.7);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.domino-side-actions div {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.domino-primary-button,
+.domino-secondary-button,
+.domino-mini-button {
+  border: 0;
+  border-radius: 999px;
+  font-weight: 1000;
+  cursor: pointer;
+}
+
+.domino-primary-button {
+  width: 100%;
+  padding: 13px 18px;
+  background: #ff6fa8;
+  color: #ffffff;
+}
+
+.domino-secondary-button {
+  padding: 9px 14px;
+  background: #4c3840;
+  color: #fff7fb;
+}
+
+.domino-mini-button {
+  padding: 9px 14px;
+  background: #ff6fa8;
+  color: #ffffff;
+}
+
+.domino-mini-button.ghost {
+  background: rgba(76, 56, 64, 0.12);
+  color: #4c3840;
+}
+
+.domino-primary-button:disabled,
+.domino-secondary-button:disabled,
+.domino-mini-button:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.domino-help-text {
+  margin: 4px 0 0;
+  color: rgba(76, 56, 64, 0.62);
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.35;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .domino-board-area {
+    left: 14px;
+    right: 14px;
+    top: 146px;
+    bottom: 150px;
+  }
+
+  .domino-table::before {
+    inset: 52px 14px 126px;
+    border-radius: 24px;
+  }
+
+  .domino-board-meta {
+    width: min(640px, calc(100vw - 20px));
+    gap: 6px;
+  }
+
+  .domino-board-meta div {
+    min-width: 0;
+    flex: 1;
+    padding: 6px 6px;
+  }
+
+  .domino-board-meta span {
+    font-size: 0.55rem;
+  }
+  .domino-tile-board {
+    font-size: 0.76rem;
+  }
+
+  .domino-tile-hand {
+    width: 58px;
+    height: 78px;
+    font-size: 0.98rem;
+  }
+
+  .domino-hand {
+    justify-content: flex-start;
+  }
+}
