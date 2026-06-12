@@ -1,0 +1,565 @@
+.naval-game {
+  min-height: 100vh;
+  width: 100%;
+  padding: 22px;
+  color: #fff;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 78, 177, 0.24), transparent 32%),
+    radial-gradient(circle at 82% 28%, rgba(63, 139, 255, 0.2), transparent 30%),
+    linear-gradient(135deg, #0a1024 0%, #231331 48%, #080914 100%);
+  overflow-x: hidden;
+  font-family: inherit;
+}
+
+.naval-topbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 3;
+}
+
+.naval-soft-button,
+.naval-actions-row button,
+.naval-primary-button,
+.naval-privacy-card button {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-radius: 999px;
+  padding: 12px 16px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.24);
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.naval-soft-button:last-child {
+  justify-self: end;
+}
+
+.naval-soft-button:hover,
+.naval-actions-row button:hover:not(:disabled),
+.naval-primary-button:hover,
+.naval-privacy-card button:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.34);
+}
+
+.naval-actions-row button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.naval-title-box {
+  padding: 10px 30px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.32);
+  text-align: center;
+  box-shadow: 0 0 46px rgba(255, 76, 180, 0.18);
+}
+
+.naval-title-box span {
+  display: block;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.72rem;
+  font-weight: 1000;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.naval-title-box h1 {
+  margin: 0;
+  font-size: clamp(1.45rem, 3vw, 2.45rem);
+  line-height: 1.05;
+}
+
+.naval-privacy-screen {
+  min-height: calc(100vh - 94px);
+  display: grid;
+  place-items: center;
+  padding: 34px 0;
+}
+
+.naval-privacy-card {
+  width: min(560px, 100%);
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 32px;
+  background: rgba(0, 0, 0, 0.36);
+  text-align: center;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34);
+}
+
+.naval-privacy-card.emily {
+  box-shadow:
+    0 0 44px rgba(255, 73, 180, 0.22),
+    0 28px 80px rgba(0, 0, 0, 0.34);
+}
+
+.naval-privacy-card.rafa {
+  box-shadow:
+    0 0 44px rgba(67, 152, 255, 0.22),
+    0 28px 80px rgba(0, 0, 0, 0.34);
+}
+
+.naval-avatar {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.78);
+  border-radius: 18px;
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 1000;
+  line-height: 1;
+  box-shadow: inset 0 -7px 0 rgba(0, 0, 0, 0.14);
+}
+
+.emily .naval-avatar {
+  background: linear-gradient(145deg, #d92aac, #ff76ca);
+}
+
+.rafa .naval-avatar {
+  background: linear-gradient(145deg, #1e68d8, #48a8ff);
+}
+
+.naval-privacy-card > span,
+.naval-player-heading span,
+.naval-board-title span,
+.naval-turn-card span,
+.naval-health-card span {
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.72rem;
+  font-weight: 1000;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.naval-privacy-card h2 {
+  margin: 0;
+  font-size: clamp(1.9rem, 5vw, 3.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+
+.naval-privacy-card p {
+  width: min(420px, 100%);
+  margin: 0;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.6;
+}
+
+.naval-privacy-card button,
+.naval-primary-button {
+  margin-top: 8px;
+  background: linear-gradient(145deg, rgba(255, 73, 180, 0.88), rgba(92, 96, 255, 0.82));
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.naval-placement-layout,
+.naval-battle-layout {
+  min-height: calc(100vh - 94px);
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 28px 0 20px;
+}
+
+.naval-placement-layout {
+  grid-template-columns: minmax(210px, 250px) minmax(420px, 590px) minmax(210px, 260px);
+}
+
+.naval-battle-layout {
+  grid-template-columns: minmax(310px, 430px) minmax(230px, 300px) minmax(310px, 430px);
+}
+
+.naval-side-card,
+.naval-rules-card,
+.naval-message-card,
+.naval-turn-card,
+.naval-health-card,
+.naval-board-card {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 26px;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 54px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(10px);
+}
+
+.naval-side-card,
+.naval-rules-card {
+  padding: 18px;
+}
+
+.naval-side-card.emily,
+.naval-board-card.emily,
+.naval-health-card.emily {
+  border-color: rgba(255, 112, 198, 0.28);
+}
+
+.naval-side-card.rafa,
+.naval-board-card.rafa,
+.naval-health-card.rafa {
+  border-color: rgba(89, 171, 255, 0.28);
+}
+
+.naval-player-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.naval-player-heading strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.naval-fleet-list {
+  display: grid;
+  gap: 8px;
+}
+
+.naval-ship-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 9px;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.naval-ship-row.placed {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.naval-ship-row.sunk {
+  background: rgba(255, 73, 100, 0.18);
+  border-color: rgba(255, 117, 139, 0.34);
+}
+
+.naval-ship-row strong {
+  font-size: 0.93rem;
+}
+
+.naval-ship-row small {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.73rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.naval-placement-main {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+}
+
+.naval-message-card {
+  width: min(100%, 590px);
+  min-height: 70px;
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  padding: 14px 18px;
+  text-align: center;
+}
+
+.naval-message-card strong {
+  font-size: clamp(0.98rem, 2vw, 1.18rem);
+  line-height: 1.35;
+}
+
+.naval-message-card span,
+.naval-rules-card p,
+.naval-turn-card small,
+.naval-health-card small {
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.naval-board-card {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.naval-board-title {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.naval-board-title strong {
+  font-size: 1.22rem;
+  line-height: 1;
+}
+
+.naval-board {
+  width: min(100%, 520px);
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  gap: 6px;
+  padding: 10px;
+  border-radius: 26px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    rgba(0, 0, 0, 0.28);
+  background-size: 12.5% 12.5%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 0 34px rgba(255, 255, 255, 0.04),
+    0 24px 60px rgba(0, 0, 0, 0.28);
+}
+
+.naval-cell {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.16), transparent 58%),
+    rgba(34, 105, 155, 0.24);
+  color: #fff;
+  font-size: clamp(0.82rem, 2.2vw, 1.22rem);
+  font-weight: 1000;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.naval-cell:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.03);
+  border-color: rgba(255, 255, 255, 0.38);
+}
+
+.naval-cell:disabled {
+  cursor: default;
+}
+
+.naval-cell.placed {
+  background: linear-gradient(145deg, rgba(255, 213, 226, 0.3), rgba(255, 255, 255, 0.12));
+  border-color: rgba(255, 255, 255, 0.38);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+}
+
+.naval-cell.preview {
+  background: rgba(142, 226, 255, 0.28);
+  border-color: rgba(177, 236, 255, 0.72);
+}
+
+.naval-cell.invalid-preview {
+  background: rgba(255, 64, 102, 0.28);
+  border-color: rgba(255, 124, 148, 0.76);
+}
+
+.naval-cell.targetable {
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.22), transparent 58%),
+    rgba(42, 132, 190, 0.35);
+}
+
+.naval-cell.targetable:hover {
+  box-shadow: 0 0 0 4px rgba(255, 213, 226, 0.14);
+}
+
+.naval-cell.hit {
+  background: linear-gradient(145deg, rgba(255, 74, 112, 0.92), rgba(255, 154, 80, 0.82));
+  border-color: rgba(255, 220, 190, 0.86);
+  box-shadow: 0 0 18px rgba(255, 88, 107, 0.36);
+}
+
+.naval-cell.miss {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.54);
+}
+
+.naval-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.naval-rules-card {
+  display: grid;
+  gap: 8px;
+}
+
+.naval-rules-card strong {
+  color: #ffd5df;
+  font-size: 0.86rem;
+  font-weight: 1000;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.naval-rules-card p {
+  margin: 0;
+}
+
+.naval-battle-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.naval-turn-card {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  padding: 18px;
+  text-align: center;
+}
+
+.naval-turn-card strong {
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+  line-height: 0.95;
+}
+
+.naval-message-card.battle {
+  width: 100%;
+  min-height: 120px;
+}
+
+.naval-health-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.naval-health-card {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 14px 10px;
+  text-align: center;
+}
+
+.naval-health-card strong {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.naval-primary-button {
+  width: 100%;
+}
+
+@media (max-width: 1120px) {
+  .naval-placement-layout,
+  .naval-battle-layout {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .naval-side-card,
+  .naval-rules-card,
+  .naval-battle-panel,
+  .naval-board-card {
+    width: min(100%, 590px);
+    justify-self: center;
+  }
+
+  .naval-battle-panel {
+    order: -1;
+  }
+}
+
+@media (max-width: 680px) {
+  .naval-game {
+    padding: 12px;
+  }
+
+  .naval-topbar {
+    grid-template-columns: 1fr;
+  }
+
+  .naval-soft-button,
+  .naval-soft-button:last-child,
+  .naval-title-box {
+    justify-self: center;
+  }
+
+  .naval-title-box {
+    width: min(100%, 360px);
+  }
+
+  .naval-privacy-screen,
+  .naval-placement-layout,
+  .naval-battle-layout {
+    min-height: auto;
+    padding-top: 18px;
+  }
+
+  .naval-privacy-card,
+  .naval-side-card,
+  .naval-rules-card,
+  .naval-board-card,
+  .naval-turn-card,
+  .naval-message-card,
+  .naval-health-card {
+    border-radius: 22px;
+  }
+
+  .naval-privacy-card {
+    padding: 26px 18px;
+  }
+
+  .naval-board {
+    gap: 4px;
+    padding: 7px;
+    border-radius: 20px;
+  }
+
+  .naval-cell {
+    border-radius: 9px;
+    font-size: clamp(0.68rem, 4vw, 1rem);
+  }
+
+  .naval-board-title {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .naval-health-grid {
+    grid-template-columns: 1fr;
+  }
+}

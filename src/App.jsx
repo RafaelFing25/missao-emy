@@ -9,6 +9,8 @@ import EscapeRoomGame from "./games/EscapeRoomGame";
 import UnoGame from "./games/UnoGame";
 import JogoDaVelhaGame from "./games/JogoDaVelhaGame";
 import CobrinhaGame from "./games/CobrinhaGame";
+import BatalhaNavalGame from "./games/BatalhaNavalGame";
+import LabirintoGame from "./games/LabirintoGame";
 import "./App.css";
 
 function App() {
@@ -16,6 +18,12 @@ function App() {
 
   return (
     <main className="app">
+      {screen === "labirinto" && (
+  <LabirintoGame onBack={() => setScreen("menu")} />
+)}
+      {screen === "batalha-naval" && (
+        <BatalhaNavalGame onBack={() => setScreen("menu")} />
+      )}
       {screen === "cobrinha" && (
   <CobrinhaGame onBack={() => setScreen("menu")} />
 )}

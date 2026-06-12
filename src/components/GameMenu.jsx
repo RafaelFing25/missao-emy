@@ -54,7 +54,21 @@ const games = [
   subtitle: "Pegue docinhos sem deixar a cobrinha se enrolar.",
   status: "Jogar",
   available: true,
-}
+},
+{
+    id: "batalha-naval",
+    title: "Batalha Naval",
+    subtitle: "Emily x Rafa com ataque em turnos.",
+    status: "Jogar",
+    available: true,
+  },
+  {
+  id: "labirinto",
+  title: "Labirinto da Moto",
+  subtitle: "Ajude a Emily a pilotar até o coração final.",
+  status: "Jogar",
+  available: true,
+},
 ];
 
 function GameMenu({ onSelectGame }) {

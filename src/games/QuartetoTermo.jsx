@@ -1,6 +1,33 @@
 import { useEffect, useMemo, useState } from "react";
 
-const WORDS = ["BEIJO", "LINDA", "GOSTO", "VUXEE"];
+const WORD_BANK = [
+  "BEIJO",
+  "LINDA",
+  "GOSTO",
+  "VUXEE",
+  "EMILY",
+  "CASAL",
+  "RISOS",
+  "FELIZ",
+  "DOCES",
+  "VOLTA",
+  "MIMOS",
+  "SONHO",
+  "CHAVE",
+  "PORTA",
+  "PISTA",
+  "SEGUE",
+  "JUNTO",
+  "OLHAR",
+  "FRASE",
+  "BRISA",
+  "QUERO",
+  "SORRI",
+  "NOITE",
+  "LUZES",
+];
+
+const WORDS_PER_GAME = 4;
 const WORD_SIZE = 5;
 const MAX_ATTEMPTS = 9;
 
@@ -21,6 +48,39 @@ function normalizeKey(value) {
     .toUpperCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
+}
+
+function shuffleWords(words) {
+  const shuffled = [...words];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[i]];
+  }
+
+  return shuffled;
+}
+
+function hasSameWords(firstList, secondList) {
+  if (firstList.length !== secondList.length) return false;
+  return firstList.every((word) => secondList.includes(word));
+}
+
+function getRandomWords(previousWords = []) {
+  const normalizedBank = WORD_BANK.map((word) => normalizeKey(word)).filter(
+    (word) => word.length === WORD_SIZE
+  );
+  const uniqueBank = [...new Set(normalizedBank)];
+
+  for (let attempt = 0; attempt < 12; attempt++) {
+    const selectedWords = shuffleWords(uniqueBank).slice(0, WORDS_PER_GAME);
+
+    if (!hasSameWords(selectedWords, previousWords)) {
+      return selectedWords;
+    }
+  }
+
+  return shuffleWords(uniqueBank).slice(0, WORDS_PER_GAME);
 }
 
 function evaluateGuess(guess, target) {
@@ -68,6 +128,7 @@ function getNextPosition(letters, currentIndex) {
 }
 
 function QuartetoTermo({ onBack }) {
+  const [currentWords, setCurrentWords] = useState(() => getRandomWords());
   const [guesses, setGuesses] = useState([]);
   const [currentLetters, setCurrentLetters] = useState(
     Array(WORD_SIZE).fill("")
@@ -77,14 +138,14 @@ function QuartetoTermo({ onBack }) {
   const [gameStatus, setGameStatus] = useState("playing");
 
   const solvedWords = useMemo(() => {
-    return WORDS.filter((word) => guesses.includes(word));
-  }, [guesses]);
+    return currentWords.filter((word) => guesses.includes(word));
+  }, [currentWords, guesses]);
 
   const keyboardStatus = useMemo(() => {
     const status = {};
 
     guesses.forEach((guess) => {
-      WORDS.forEach((target) => {
+      currentWords.forEach((target) => {
         const evaluation = evaluateGuess(guess, target);
 
         guess.split("").forEach((letter, index) => {
@@ -102,7 +163,7 @@ function QuartetoTermo({ onBack }) {
     });
 
     return status;
-  }, [guesses]);
+  }, [currentWords, guesses]);
 
   function selectCell(index) {
     if (gameStatus !== "playing") return;
@@ -159,13 +220,15 @@ function QuartetoTermo({ onBack }) {
 
     const currentGuess = currentLetters.join("");
     const nextGuesses = [...guesses, currentGuess];
-    const nextSolvedWords = WORDS.filter((word) => nextGuesses.includes(word));
+    const nextSolvedWords = currentWords.filter((word) =>
+      nextGuesses.includes(word)
+    );
 
     setGuesses(nextGuesses);
     setCurrentLetters(Array(WORD_SIZE).fill(""));
     setActiveIndex(0);
 
-    if (nextSolvedWords.length === WORDS.length) {
+    if (nextSolvedWords.length === currentWords.length) {
       setGameStatus("won");
       setMessage("Você acertou tudo. Tá impossível competir.");
       return;
@@ -173,11 +236,11 @@ function QuartetoTermo({ onBack }) {
 
     if (nextGuesses.length >= MAX_ATTEMPTS) {
       setGameStatus("lost");
-      setMessage(`Fim de jogo. As palavras eram: ${WORDS.join(", ")}.`);
+      setMessage(`Fim de jogo. As palavras eram: ${currentWords.join(", ")}.`);
       return;
     }
 
-    const remaining = WORDS.length - nextSolvedWords.length;
+    const remaining = currentWords.length - nextSolvedWords.length;
 
     setMessage(
       remaining === 1
@@ -215,10 +278,11 @@ function QuartetoTermo({ onBack }) {
   }
 
   function restartGame() {
+    setCurrentWords((previousWords) => getRandomWords(previousWords));
     setGuesses([]);
     setCurrentLetters(Array(WORD_SIZE).fill(""));
     setActiveIndex(0);
-    setMessage("Descubra as quatro palavras.");
+    setMessage("Novo quarteto sorteado. Descubra as quatro palavras.");
     setGameStatus("playing");
   }
 
@@ -247,7 +311,7 @@ function QuartetoTermo({ onBack }) {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [currentLetters, activeIndex, guesses, gameStatus]);
+  }, [currentLetters, activeIndex, guesses, gameStatus, currentWords]);
 
   return (
     <section className="termo-page">
@@ -269,7 +333,7 @@ function QuartetoTermo({ onBack }) {
             className="termo-icon"
             onClick={() =>
               setMessage(
-                `Palavras acertadas: ${solvedWords.length}/${WORDS.length}.`
+                `Palavras acertadas: ${solvedWords.length}/${currentWords.length}.`
               )
             }
             aria-label="Progresso"
@@ -291,7 +355,7 @@ function QuartetoTermo({ onBack }) {
 
       <div className="boards-area">
         <div className="boards-grid">
-          {WORDS.map((word) => (
+          {currentWords.map((word) => (
             <WordBoard
               key={word}
               target={word}
@@ -308,7 +372,7 @@ function QuartetoTermo({ onBack }) {
       <Keyboard keyboardStatus={keyboardStatus} onKeyPress={handleKey} />
 
       <footer className="termo-footer">
-        {solvedWords.length}/{WORDS.length}
+        {solvedWords.length}/{currentWords.length}
       </footer>
     </section>
   );
